@@ -5,7 +5,9 @@ namespace MisskeyDotNet
 {
     public sealed class MiAuth
     {
-        public string Host { get; }
+        public string Host { get; } 
+        
+        public bool IsNotSecureServer { get; } = false;
 
         public string? Name { get; }
 
@@ -19,17 +21,19 @@ namespace MisskeyDotNet
 
         public string Url { get; }
 
-        public MiAuth(string host, string? name, string? iconUrl = null, string? callbackUrl = null, params Permission[] permissions)
+        public MiAuth(string host, bool isNotSecureServer, string? name, string? iconUrl = null, string? callbackUrl = null, params Permission[] permissions)
         {
             Host = host;
             Name = name;
+            IsNotSecureServer = isNotSecureServer;
             IconUrl = iconUrl;
             CallbackUrl = callbackUrl;
             Permissions = permissions;
             Uuid = Guid.NewGuid().ToString();
             stringifiedPermissions = string.Join(',', Permissions.ToStringArray());
+            var protocol = isNotSecureServer ? "http://" : "https://";
 
-            Url = "https://" + Host + "/miauth/" + Uuid;
+            Url = protocol + Host + "/miauth/" + Uuid;
 
             var query = new
             {
@@ -62,7 +66,7 @@ namespace MisskeyDotNet
 
         public async ValueTask<Misskey> CheckAsync()
         {
-            var res = await new Misskey(Host).ApiAsync("miauth/" + Uuid + "/check");
+            var res = await new Misskey(Host, IsNotSecureServer).ApiAsync("miauth/" + Uuid + "/check");
 
             if (res["token"] is string token)
                 return new Misskey(Host, token);

@@ -17,7 +17,7 @@ namespace MisskeyDotNet.Example
             }
             else
             {
-                var miAuth = new MiAuth("misskey.io", "Misskey.NET", null, null, Permission.All);
+                var miAuth = new MiAuth("misskey.io", false, "Misskey.NET", null, null, Permission.All);
                 if (!miAuth.TryOpenBrowser())
                 {
                     Console.WriteLine("次のURLをお使いのウェブブラウザーで開き、認証を完了させてください。");

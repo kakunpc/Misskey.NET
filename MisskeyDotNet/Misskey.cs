@@ -18,6 +18,11 @@ namespace MisskeyDotNet
         public string Host { get; }
 
         /// <summary>
+        /// IsNotSecureServer
+        /// </summary>
+        public bool IsNotSecureServer { get; } = false;
+
+        /// <summary>
         /// Get a current API token.
         /// </summary>
         public string? Token { get; }
@@ -35,10 +40,32 @@ namespace MisskeyDotNet
         /// Initialize a new instance of <see cref="Misskey"/> class.
         /// </summary>
         /// <param name="host"></param>
+        /// <param name="isNotSecureServer"></param>
+        public Misskey(string host, bool isNotSecureServer)
+        {
+            Host = host;
+            IsNotSecureServer = isNotSecureServer;
+        }
+
+        /// <summary>
+        /// Initialize a new instance of <see cref="Misskey"/> class.
+        /// </summary>
+        /// <param name="host"></param>
         /// <param name="token"></param>
         public Misskey(string host, string? token) : this(host)
         {
             Token = token;
+        }
+
+        /// <summary>
+        /// Initialize a new instance of <see cref="Misskey"/> class.
+        /// </summary>
+        /// <param name="host"></param>
+        /// <param name="token"></param>
+        public Misskey(string host, bool isNotSecureServer, string? token) : this(host)
+        {
+            Token = token;
+            IsNotSecureServer = isNotSecureServer;
         }
 
         /// <summary>
@@ -161,7 +188,8 @@ namespace MisskeyDotNet
 
         private string GetApiUrl(string endPoint)
         {
-            return "https://" + Host + "/api/" + endPoint;
+            var protocol = IsNotSecureServer ? "http://" : "https://";
+            return protocol + Host + "/api/" + endPoint;
         }
 
         private static T Deserialize<T>(string s)
