@@ -69,7 +69,7 @@ namespace MisskeyDotNet
             var res = await new Misskey(Host, IsNotSecureServer).ApiAsync("miauth/" + Uuid + "/check");
 
             if (res["token"] is string token)
-                return new Misskey(Host, token);
+                return new Misskey(Host, IsNotSecureServer, token);
 
             throw new InvalidOperationException("Failed to check MiAuth session");
         }
